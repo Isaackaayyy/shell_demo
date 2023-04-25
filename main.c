@@ -2,18 +2,21 @@
 
 /**
  * main - building a simple shell
+ * @arc: arc
+ * @argv: argv
  * Return: 0 on success
  */
 
-int main(void)
+int main(int ac, char **argv)
 {
 	char *call_on = "simshell:~# ";
 	char *lineptr = NULL, *c_lineptr = NULL, *tok;
-	char **tok_arr;
 	size_t n = 0;
 	ssize_t read_chars;
-	const char *delim = " \n";
+	const char *delim = " ";
 	int tok_count = 0, i = 0;
+
+	void(ac);
 
 	/* Infinite loop for shell */
 	while (1)
@@ -46,21 +49,21 @@ int main(void)
 			tok = strtok(NULL, delim);
 		}
 		tok_count++;
-			
+	
 
 		/* allocate space for array of strings from strtok */
-		tok_arr = malloc(sizeof(char *) * tok_count);
+		argv = malloc(sizeof(char *) * tok_count);
 
 		/* break the copy string */
 		tok = strtok(c_lineptr, delim);
 		while (tok != NULL)
 		{
-			tok_arr[i] = malloc(sizeof(char) * strlen(tok));
-			strcpy(tok_arr[i], tok);
+			argv[i] = malloc(sizeof(char) * strlen(tok));
+			strcpy(argv[i], tok);
 			tok = strtok(NULL, delim);
 			i++;
 		}
-		tok_arr[i] = NULL;
+		argv[i] = NULL;
 
 		printf("%s\n", lineptr);
 
