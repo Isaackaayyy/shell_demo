@@ -66,6 +66,8 @@ int main()
 
 		printf("%s\n", lineptr);
 
+		_execmd(tok_arr);
+
 		/* allocated memory freed up here */
 		free(c_lineptr);
 		free(lineptr);
