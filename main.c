@@ -7,22 +7,21 @@
  * Return: 0 on success
  */
 
-int main(int ac, char **argv)
+int main()
 {
 	char *call_on = "simshell:~# ";
 	char *lineptr = NULL, *c_lineptr = NULL, *tok;
-	size_t n = 0;
+	char **tok_arr;
+	size_t a = 0;
 	ssize_t read_chars;
 	const char *delim = " ";
 	int tok_count = 0, i = 0;
-
-	void(ac);
 
 	/* Infinite loop for shell */
 	while (1)
 	{
 		printf("%s", call_on);
-		read_chars = getline(&lineptr, &n, stdin);
+		read_chars = getline(&lineptr, &a, stdin);
 
 		/* check if getline function reaches EOF or user uses CTRL + D or fails */
 		if (read_chars == -1)
@@ -43,7 +42,7 @@ int main(int ac, char **argv)
 		tok = strtok(lineptr, delim);
 
 		/* find out how many tokens are present */
-		while (lineptr != NULL)
+		while (tok != NULL)
 		{
 			tok_count++;
 			tok = strtok(NULL, delim);
@@ -52,22 +51,23 @@ int main(int ac, char **argv)
 	
 
 		/* allocate space for array of strings from strtok */
-		argv = malloc(sizeof(char *) * tok_count);
+		tok_arr = malloc(sizeof(char *) * tok_count);
 
 		/* break the copy string */
 		tok = strtok(c_lineptr, delim);
 		while (tok != NULL)
 		{
-			argv[i] = malloc(sizeof(char) * strlen(tok));
-			strcpy(argv[i], tok);
+			tok_arr[i] = malloc(sizeof(char) * strlen(tok));
+			strcpy(tok_arr[i], tok);
 			tok = strtok(NULL, delim);
 			i++;
 		}
-		argv[i] = NULL;
+		tok_arr[i] = NULL;
 
 		printf("%s\n", lineptr);
 
 		/* allocated memory freed up here */
+		free(c_lineptr);
 		free(lineptr);
 	}
 	return (0);
