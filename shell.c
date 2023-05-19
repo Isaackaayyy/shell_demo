@@ -6,38 +6,36 @@
  * @arv: argument vector
  * Return: 0 on success, 1 on error
  */
-int shell(int arc, char **arv)
+int main(int arc, char **arv)
 {
-	info_s infor[] = { INFO_INIT };
-	int fp = 2;
+	int c = 0, status = 1;
+	char *line;
+	int get_line, n;
+	char *delim = " \n";
+	char *tok;
 
-	asm ("mov %1, %0\n\t"
-		"add $3, %0"
-		: "=r" (fp)
-		: "r" (fp));
-
-	if (arc == 2)
+	while (status)
 	{
-		fp = open(arv[1], O_RDONLY);
-		if (fp == -1)
+		if (isatty(0) == 1)
+			printf("Shell $ ");
+
+		get_line = getline(&line, &n, stdin);
+		if (get_line == -1)
 		{
-			if (errno == EACCES)
-				exit(126);
-			if (errno == ENOENT)
-			{
-				_puts(arv[0]);
-				_puts(": 0: Can't open ");
-				_puts(arv[1]);
-				_putchar('\n');
-				_putchar(BUF_FLUSH);
-				exit(127);
-			}
-			return (EXIT_FAILURE);
+			perror("getline error");
+			exit(EXIT_FAILURE);
 		}
-		infor->readfd = fp;
-	}
-	populate_env_list(infor);
-	_read_history(infor);
-	hsh(infor, arv);
-	return (EXIT_SUCCESS);
-}
+		
+		line_dup = strdup(line);
+
+		tok = strtok(line_dup, delim);
+
+		while (tok)
+		{
+			c++;
+			tok = strtok(NULL, delim);
+		}
+
+		arv = malloc(sizeof(char *) * (c + 1));
+
+		
